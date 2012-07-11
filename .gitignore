@@ -1,0 +1,10 @@
+/bin
+/out
+/samples
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear

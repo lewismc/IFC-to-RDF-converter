@@ -1,0 +1,40 @@
+package fi.ni.ifc2x3;
+import fi.ni.ifc2x3.interfaces.*;
+import fi.ni.*;
+import java.util.*;
+
+/*
+ * IFC Java class
+ * @author Jyrki Oraskari
+ * @license This work is licensed under a Creative Commons Attribution 3.0 Unported License.
+ * http://creativecommons.org/licenses/by/3.0/ 
+ */
+
+public class IfcDateAndTime extends Thing implements IfcDateTimeSelect, IfcObjectReferenceSelect
+{
+ // The property attributes
+ IfcCalendarDate   dateComponent;
+ IfcLocalTime   timeComponent;
+
+
+ // Getters and setters of properties
+
+ public IfcCalendarDate getDateComponent() {
+   return dateComponent;
+
+ }
+ public void setDateComponent(IfcCalendarDate value){
+   this.dateComponent=value;
+
+ }
+
+ public IfcLocalTime getTimeComponent() {
+   return timeComponent;
+
+ }
+ public void setTimeComponent(IfcLocalTime value){
+   this.timeComponent=value;
+
+ }
+
+}

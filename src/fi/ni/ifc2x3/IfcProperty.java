@@ -1,0 +1,72 @@
+package fi.ni.ifc2x3;
+import fi.ni.ifc2x3.interfaces.*;
+import fi.ni.*;
+import java.util.*;
+
+/*
+ * IFC Java class
+ * @author Jyrki Oraskari
+ * @license This work is licensed under a Creative Commons Attribution 3.0 Unported License.
+ * http://creativecommons.org/licenses/by/3.0/ 
+ */
+
+public class IfcProperty extends Thing 
+{
+ // The property attributes
+ String name;
+ String description;
+ // The inverse attributes
+
+ InverseLinksList<IfcPropertyDependencyRelationship> propertyForDependance= new InverseLinksList<IfcPropertyDependencyRelationship>();
+ InverseLinksList<IfcPropertyDependencyRelationship> propertyDependsOn= new InverseLinksList<IfcPropertyDependencyRelationship>();
+ InverseLinksList<IfcComplexProperty> partOfComplex= new InverseLinksList<IfcComplexProperty>();
+
+
+ // Getters and setters of properties
+
+ public String getName() {
+   return name;
+ }
+ public void setName(String value){
+   this.name=value;
+
+ }
+
+ public String getDescription() {
+   return description;
+ }
+ public void setDescription(String value){
+   this.description=value;
+
+ }
+
+ // Getters and setters of inverse values
+
+ public InverseLinksList<IfcPropertyDependencyRelationship> getPropertyForDependance() {
+   return propertyForDependance;
+
+ }
+ public void setPropertyForDependance(IfcPropertyDependencyRelationship value){
+   this.propertyForDependance.add(value);
+
+ }
+
+ public InverseLinksList<IfcPropertyDependencyRelationship> getPropertyDependsOn() {
+   return propertyDependsOn;
+
+ }
+ public void setPropertyDependsOn(IfcPropertyDependencyRelationship value){
+   this.propertyDependsOn.add(value);
+
+ }
+
+ public InverseLinksList<IfcComplexProperty> getPartOfComplex() {
+   return partOfComplex;
+
+ }
+ public void setPartOfComplex(IfcComplexProperty value){
+   this.partOfComplex.add(value);
+
+ }
+
+}

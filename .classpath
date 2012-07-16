@@ -2,12 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="lib/openrdf-sesame-2.6.3-onejar.jar"/>
-	<classpathentry kind="lib" path="lib/virt_sesame2.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.5.0.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-jdk14-1.5.0.jar"/>
-	<classpathentry kind="lib" path="lib/virtjdbc3.jar"/>
-	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/commons-codec-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-dbcp-20030825.184428.jar"/>
+	<classpathentry kind="lib" path="lib/virtjdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/toolkits_1-2-0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-pool-20030825.183949.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

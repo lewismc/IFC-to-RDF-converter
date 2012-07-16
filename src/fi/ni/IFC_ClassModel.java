@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -39,11 +42,13 @@ import java.util.zip.CRC32;
 
 import org.Tree;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.dbcp.BasicDataSource;
 
 import fi.ni.ifc2x3.IfcOwnerHistory;
 import fi.ni.ifc2x3.IfcProject;
 import fi.ni.ifc2x3.IfcRoot;
 import fi.ni.rdf.Namespace;
+import fi.ni.rdf.VirtConfig;
 import fi.ni.vo.AttributeVO;
 import fi.ni.vo.EntityVO;
 import fi.ni.vo.IFC_X3_VO;
@@ -248,38 +253,59 @@ public class IFC_ClassModel {
 
 	// ==============================================================================================================================
 
-	public void listRDF(String outputFileName) {
+	public void listRDF(String outputFileName, String path, VirtConfig virt) throws IOException, SQLException {
 
 		BufferedWriter out = null;
+		Connection c = null;
+		String prefix_query = "PREFIX drum: <" + path + "> "
+				+ "PREFIX owl: <" + Namespace.OWL + "> "
+				+ "PREFIX ifc: <" + Namespace.IFC + "> "
+				+ "PREFIX xsd: <" + Namespace.XSD + "> "
+				+ "INSERT IN GRAPH <" + path + "> { ";
+		
 		try {
+			//Setup file output
 			out = new BufferedWriter(new FileWriter(outputFileName));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			out.write("@prefix drum: <" + Namespace.DRUM + ">.\n");
+			out.write("@prefix drum: <" + path + ">.\n");
 			out.write("@prefix owl: <" + Namespace.OWL + "> .\n");
 			out.write("@prefix ifc: <" + Namespace.IFC + "> .\n");
 			out.write("@prefix xsd: <" + Namespace.XSD + "> .\n");
 			out.write("\n");
+			
+			//If necessary, setup virtuoso connection
+			if(virt != null){
+				BasicDataSource dataSource = new BasicDataSource();
+				dataSource.setUsername(virt.user);
+				dataSource.setPassword(virt.password);
+				dataSource.setUrl(virt.jdbc_uri);
+				dataSource.setMaxActive(100);
+				dataSource.setDriverClassName("virtuoso.jdbc4.Driver");
+				c = dataSource.getConnection();
+			}
 
 			for (Map.Entry<Long, Thing> entry : object_buffer.entrySet()) {
 				Thing gobject = entry.getValue();
 				String triples = generateTriples(gobject);
 				out.write(triples);
+				
+				if(virt != null){
+					Statement stmt = c.createStatement();
+					StringBuilder queryString = new StringBuilder();
+					queryString.append(prefix_query);
+					queryString.append(triples);
+					queryString.append("}");
+					boolean more = stmt.execute("sparql " + queryString.toString());
+					if (!more) {
+						System.err.println("INSERT failed.");
+					}
+					if(stmt != null) stmt.close();
+				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		} finally {
-			try {
-				out.close();
-
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
+			out.close();
+			if(c!=null) c.close();
 		}
-
 	}
 
 	private String deduceSubject(Thing pointer) {

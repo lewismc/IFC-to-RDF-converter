@@ -13,6 +13,5 @@ public class Namespace {
 	
 	public static final String IFC = "http://drum.cs.hut.fi/ontology/ifc2x3#";
 	
-	public static final String DRUM = "http://drum3.cs.hut.fi/";
 	
 }

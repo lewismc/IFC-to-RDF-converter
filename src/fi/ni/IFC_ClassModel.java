@@ -257,7 +257,7 @@ public class IFC_ClassModel {
 
 		BufferedWriter out = null;
 		Connection c = null;
-		String prefix_query = "PREFIX drum: <" + path + "> "
+		String prefix_query = "PREFIX : <" + path + "#> "
 				+ "PREFIX owl: <" + Namespace.OWL + "> "
 				+ "PREFIX ifc: <" + Namespace.IFC + "> "
 				+ "PREFIX xsd: <" + Namespace.XSD + "> "
@@ -266,7 +266,7 @@ public class IFC_ClassModel {
 		try {
 			//Setup file output
 			out = new BufferedWriter(new FileWriter(outputFileName));
-			out.write("@prefix drum: <" + path + ">.\n");
+			out.write("@prefix : <" + path + "#>.\n");
 			out.write("@prefix owl: <" + Namespace.OWL + "> .\n");
 			out.write("@prefix ifc: <" + Namespace.IFC + "> .\n");
 			out.write("@prefix xsd: <" + Namespace.XSD + "> .\n");
@@ -314,7 +314,7 @@ public class IFC_ClassModel {
 			byte bytecode[] = IFC_Base64.decode(((IfcRoot) pointer)
 					.getGlobalId());
 			String hex = new String(Hex.encodeHex(bytecode));
-			subject = "drum:GUID" + hex;
+			subject = ":GUID" + hex;
 		} else {
 			subject = "_:" + this.ifc_model_name + "_iref_"
 					+ pointer.i.drum_getLine_number();
@@ -330,7 +330,7 @@ public class IFC_ClassModel {
 
 		String subject = deduceSubject(pointer);
 		if (IfcRoot.class.isInstance(pointer)) {
-			toRet.append(subject + " owl:sameAs drum:" + this.ifc_model_name
+			toRet.append(subject + " owl:sameAs _:" + this.ifc_model_name
 					+ "_iref_" + pointer.i.drum_getLine_number() + ".\n");
 		}
 		toRet.append(subject + " a ifc:" + pointer.getClass().getSimpleName()
@@ -1317,13 +1317,13 @@ public class IFC_ClassModel {
 					for (Map.Entry<String, LinkedList<IFC_X3_VO>> inverse_set : vo.inverse_pointer_sets
 							.entrySet()) {
 						LinkedList<IFC_X3_VO> li = inverse_set.getValue();
-						String subject = filter_illegal_chars("drum:"
+						String subject = filter_illegal_chars(":"
 								+ ifc_filename + "_i" + vo.getLine_num());
 						if (vo.getGid() != null) {
 							byte bytecode[] = IFC_Base64
 									.decode(filter_extras(vo.getGid()));
 							String hex = new String(Hex.encodeHex(bytecode));
-							subject = "drum:GID" + hex;
+							subject = ":GID" + hex;
 						}
 						for (int i = 0; i < li.size(); i++) {
 							IFC_X3_VO ivo = li.get(i);

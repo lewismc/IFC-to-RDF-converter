@@ -1,1 +1,0 @@
-openrdf-sesame-2.6.3-onejar.jar is needed, if the Sesame API is used

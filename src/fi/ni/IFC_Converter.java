@@ -65,9 +65,8 @@ public class IFC_Converter {
 			if(args.length == 4) {
 				convert(args[0], args[1], args[2], args[3], DEFAULT_PATH, null);
 			} else {
-				FileInputStream fis;
 				try {
-					fis = new FileInputStream(args[1]);
+					FileInputStream fis = new FileInputStream(args[1]);
 					String jsonString = slurp(fis);
 					fis.close();
 					convert(jsonString);

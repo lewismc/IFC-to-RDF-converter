@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import softhema.system.toolkits.ToolkitString;
+import fi.ni.rdf.Namespace;
 import fi.ni.vo.AttributeVO;
 import fi.ni.vo.EntityVO;
 import fi.ni.vo.InverseVO;
@@ -112,11 +113,11 @@ public class ExpressReader {
 	public void outputRDFS(BufferedWriter out) {
 		Iterator<Entry<String, EntityVO>> it = entities.entrySet().iterator();
 		try {
-			out.write("@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n");
-			out.write("@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n");
-			out.write("@prefix owl: <http://www.w3.org/2002/07/owl#> .\n");
-			out.write("@prefix ifc: <http://drum.cs.hut.fi/ontology/ifc2x3tc1#> .\n");
-			out.write("@prefix xsd: <http://www.w3.org/TR/xmlschema-2#> .\n");
+			out.write("@prefix rdf:  <" + Namespace.RDF + "> .\n");
+			out.write("@prefix rdfs: <" + Namespace.RDFS + "> .\n");
+			out.write("@prefix owl: <" + Namespace.OWL + "> .\n");
+			out.write("@prefix ifc: <" + Namespace.IFC + "> .\n");
+			out.write("@prefix xsd: <" + Namespace.XSD + "> .\n");
 			out.write("\n");
 			while (it.hasNext()) {
 				Entry<String, EntityVO> pairs = it.next();
@@ -292,19 +293,19 @@ public class ExpressReader {
 
 	// @formatter:off
 	static final String owl_header = ""
-			+ "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.\r\n"
-			+ "@prefix owl: <http://www.w3.org/2002/07/owl#>.\r\n"
-			+ "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.\r\n"
-			+ "@prefix list: <http://www.w3.org/2000/10/swap/list#>.\r\n"
-			+ "@prefix dce: <http://purl.org/dc/elements/1.1/>.\r\n"
-			+ "@prefix dct: <http://purl.org/dc/terms/>.\r\n"
-			+ "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.\r\n"
-			+ "\r\n" + "ifc:\r\n" + "	a owl:Thing;\r\n"
-			+ "	a owl:Ontology;\r\n" + "	dce:title \"\"\"IFC2X3\"\"\"@en;\r\n"
-			+ "	dce:format \"\"\"OWL Full\"\"\"@en;\r\n"
-			+ " 	dce:identifier \"\"\"ifc\"\"\"@en;\r\n"
-			+ "	dce:language \"\"\"English\"\"\"@en.\r\n" + "\r\n"
-			+ "ifc:Entity\r\n" + "	rdfs:subClassOf owl:Thing;\r\n"
+			+ "@prefix xsd: <" + Namespace.XSD + ">.\n"
+			+ "@prefix owl: <" + Namespace.OWL + ">.\n"
+			+ "@prefix rdfs: <" + Namespace.RDFS + ">.\n"
+			+ "@prefix list: <" + Namespace.LIST + ">.\n"
+			+ "@prefix dce: <" + Namespace.DCE + ">.\n"
+			+ "@prefix dct: <" + Namespace.DCT + ">.\n"
+			+ "@prefix rdf: <" + Namespace.RDF + ">.\n"
+			+ "\n" + "ifc:\n" + "	a owl:Thing;\n"
+			+ "	a owl:Ontology;\n" + "	dce:title \"\"\"IFC2X3\"\"\"@en;\n"
+			+ "	dce:format \"\"\"OWL Full\"\"\"@en;\n"
+			+ " 	dce:identifier \"\"\"ifc\"\"\"@en;\n"
+			+ "	dce:language \"\"\"English\"\"\"@en.\n" + "\n"
+			+ "ifc:Entity\n" + "	rdfs:subClassOf owl:Thing;\n"
 			+ "	a owl:Class.";
 
 	// @formatter:on
@@ -312,7 +313,7 @@ public class ExpressReader {
 	public void outputOWL(BufferedWriter out) {
 		Iterator<Entry<String, EntityVO>> it = entities.entrySet().iterator();
 		try {
-			out.write("@prefix ifc: <http://drum.cs.hut.fi/ontology/ifc2x3tc1#> .\n");
+			out.write("@prefix ifc: <" + Namespace.IFC + "> .\n");
 			out.write(owl_header);
 			out.write("\n");
 			out.write("ifc:Entity\n");

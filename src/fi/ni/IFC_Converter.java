@@ -32,21 +32,21 @@ public class IFC_Converter {
 	}
 
 	public static void main(String[] args) {
-		if(args.length != 4)
-		 	System.out.println("Usage:  java  IFC_Converter  express_filename  ifc_filename  output_filename  model_name \nExample: java  IFC_Converter  c:\\jo\\IFC2X3_TC1.exp  C:\\jo\\sample.ifc  c:\\jo\\output_rdf.txt sample");
-		else
-			new IFC_Converter(args[0], args[1], args[2], args[3]);
+		//if(args.length != 4)
+		// 	System.out.println("Usage:  java  IFC_Converter  express_filename  ifc_filename  output_filename  model_name \nExample: java  IFC_Converter  c:\\jo\\IFC2X3_TC1.exp  C:\\jo\\sample.ifc  c:\\jo\\output_rdf.txt sample");
+		//else
+		//	new IFC_Converter(args[0], args[1], args[2], args[3]);
 		
-		/*
+		
 		String express_filename = "samples\\IFC2X3_TC1.exp";
-		String ifc_filename = "samples\\bolckmans_rvt2010.ifc";
-		String output_filename = "out\\bolckmans_rvt2010.rdf";
-		String model_name = "bolckmans_rvt2010";
+		String ifc_filename = "samples\\IFC2X3_TC1.ifc";
+		String output_filename = "out\\IFC2X3_TC1.rdf";
+		String model_name = "IFC2X3_TC1";
 		long t0 = System.currentTimeMillis();
 		new IFC_Converter(express_filename, ifc_filename, output_filename, model_name);
 		long t1 = System.currentTimeMillis();
 		System.out.println("done in " + ((t1-t0)/1000.0) + " seconds.");
-		*/
+		
 	}
 
 }

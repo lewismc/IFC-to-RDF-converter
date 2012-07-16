@@ -43,6 +43,7 @@ import org.apache.commons.codec.binary.Hex;
 import fi.ni.ifc2x3.IfcOwnerHistory;
 import fi.ni.ifc2x3.IfcProject;
 import fi.ni.ifc2x3.IfcRoot;
+import fi.ni.rdf.Namespace;
 import fi.ni.vo.AttributeVO;
 import fi.ni.vo.EntityVO;
 import fi.ni.vo.IFC_X3_VO;
@@ -61,12 +62,7 @@ import fi.ni.vo.ValuePair;
 public class IFC_ClassModel {
 
 	GroundingPathRegistry grounding_paths = new GroundingPathRegistry();
-	/** The DRU m_ prefix. */
-	final static String DRUM_PREFIX = "http://drum3.cs.hut.fi";
-
-	/** The IF c_ predicat e_ prefi x_ name. */
-	final static String IFC_PREDICATE_PREFIX_NAME = "ifc";
-
+	
 	/** The ifc_filename. */
 	final String ifc_filename;
 
@@ -261,13 +257,10 @@ public class IFC_ClassModel {
 			e.printStackTrace();
 		}
 		try {
-			out.write("@prefix drum: <" + DRUM_PREFIX + "/>.");
-			out.write("\n");
-			out.write("@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n");
-			out.write("@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n");
-			out.write("@prefix owl: <http://www.w3.org/2002/07/owl#> .\n");
-			out.write("@prefix ifc: <http://drum.cs.hut.fi/ontology/ifc2x3tc1#> .\n");
-			out.write("@prefix xsd: <http://www.w3.org/TR/xmlschema-2#> .\n");
+			out.write("@prefix drum: <" + Namespace.DRUM + ">.\n");
+			out.write("@prefix owl: <" + Namespace.OWL + "> .\n");
+			out.write("@prefix ifc: <" + Namespace.IFC + "> .\n");
+			out.write("@prefix xsd: <" + Namespace.XSD + "> .\n");
 			out.write("\n");
 
 			for (Map.Entry<Long, Thing> entry : object_buffer.entrySet()) {

@@ -8,21 +8,52 @@ body {
   text-align: left; /* LTR */
   
 }
-li.file {
+#content li.file {
 	background: transparent url(/images/ifclogo.jpg) no-repeat 1px 0.35em;
 	list-style-type: none;
 	padding-left: 2em;
 	padding-top: 0.2em;
 }
 
-li.folder {
+#content li.folder {
 	list-style-type: none;
 	background: transparent url(/images/folder.png) no-repeat 1px 0.35em;
 	padding-left: 2em;
 	padding-top: 0.2em;
 }
 
-li a {
+#content li a {
 	text-decoration: none;
 	color: black;
+}
+
+#editbar ul {
+	margin-left: 0;
+	padding-left: 0;
+	display: inline;
+}
+
+#editbar li {
+	padding-top: 0.2em;
+	padding-left: 2em;
+	list-style-type: none;
+	display: inline;
+}
+
+#editbar li.newfolder {
+	background: transparent url(/images/folder-new.png) no-repeat 1px 0.35em;
+	margin-right: 20px;
+}
+
+#editbar li.upload {
+	background: transparent url(/images/upload.png) no-repeat 1px 0.35em;
+}
+
+#editbar a {
+	text-decoration: none;
+	color: black;
+}
+
+#editbar {
+	float: right;
 }

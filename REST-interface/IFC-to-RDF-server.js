@@ -1,3 +1,6 @@
+var express = require("express");
+var rimraf = require('rimraf');
+var nodefs = require('node-fs')
 var fs = require('fs');
 eval(fs.readFileSync('settings.js', encoding="ascii"));
 
@@ -7,10 +10,18 @@ function configureServer(base_path){
 	
 	//setup REST server
 	//=================
-	var express = require("express"), app = express.createServer();
+	var allowCrossDomain = function(req, res, next) {
+		res.header('Access-Control-Allow-Origin', '*');
+		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
+		next();
+	}
+	
+	var app = express.createServer();
 	app.configure(function(){
 		app.use(express.methodOverride());
 		app.use(express.bodyParser());
+		app.use(allowCrossDomain);
 	});
 	app.set('view engine', 'ejs');
 	app.set('view options', {
@@ -111,9 +122,15 @@ function configureServer(base_path){
 			var stats = fs.lstatSync(fspath);
 			if(stats.isDirectory()){
 				if(isIFCResource(fspath, item)){ // we have an IFC resource
-					// perform an update
-				} else if(item == '' && containsOnlyDirs(fspath)) { // we have a directory
-					// new file
+					rimraf(fspath, function (er) {
+						if (er) throw er;
+					});
+					nodefs.mkdirSync(fspath, 0777, true);
+					var uploadedFile = fs.readFileSync(req.files.file.path);
+					fs.writeFileSync(fspath+'/'+item+'.ifc', uploadedFile);
+					res.send('UPDATED ' + req.url, 200);
+					//TODO: startup conversion!
+					
 				} else {
 					res.send('Cannot PUT ' + req.url, 405);
 				}
@@ -121,9 +138,21 @@ function configureServer(base_path){
 				res.send('Cannot PUT ' + req.url, 405);
 			}
 		} catch (e) {
-			if(e.errno == 34) // file not found
-				notfound(req, res);
-			else {
+			if(e.errno == 34){ // file not found
+				if(path == '' && item == ''){ // at root
+					res.send('Cannot PUT ' + req.url, 405);
+				} else if (item == ''){ // create directory
+					nodefs.mkdirSync(fspath, 0777, true);
+					res.send('CREATED ' + req.url, 201);
+				} else { // create IFC resource
+					nodefs.mkdirSync(fspath, 0777, true);
+					var uploadedFile = fs.readFileSync(req.files.file.path);
+					fs.writeFileSync(fspath+'/'+item+'.ifc', uploadedFile);
+					res.send('CREATED ' + req.url, 201);
+					//TODO: startup conversion!
+					
+				}
+			} else {
 				console.log(e);
 				res.send('Internal server error', 500);
 			}
@@ -133,7 +162,6 @@ function configureServer(base_path){
 	// DELETE an IFC object or directory
 	var re = RegExp('/' + PATH_PREFIX + '/(.+/)*(.*)');
 	app.delete(re, function(req, res) {
-		var rimraf = require('rimraf');
 		var path = req.params[0]==null ? '' : unescape(req.params[0].replace(/\+/g, " "));
 		var item = unescape(req.params[1].replace(/\+/g, " "));
 		var extension = null;

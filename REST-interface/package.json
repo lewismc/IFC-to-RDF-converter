@@ -4,6 +4,8 @@
   "dependencies": {
     "express": "2.5.8",
 	"ejs": "0.7.2",
-	"rimraf": "2.0.2"
+	"rimraf": "2.0.2",
+	"formidable" : "1.0.11",
+	"node-fs": "0.1.4"
   }
 }

@@ -3,24 +3,16 @@ var fs = require('fs');
 eval(fs.readFileSync('settings.js', encoding="ascii"));
 var http = require('http');
 
-function httpPut() {
-	// Build the post string from an object
-	var post_data = querystring.stringify(data);	
-
-	// An object of options to indicate where to post to
-	var post_options = {
+function httpPut(path) {
+	var put_options = {
 		host: 'localhost',
-		port: settings.users_server_port,
-		path: '/users',
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-			'Content-Length': post_data.length
-	  }
+		port: settings.server_port,
+		path: path,
+		method: 'PUT',
 	};
 
 	// Set up the request
-	var post_req = http.request(post_options, function(res) {
+	var put_req = http.request(put_options, function(res) {
 		res.setEncoding('utf8');
 		res.on('data', function (chunk) {
 			console.log(chunk);
@@ -28,8 +20,8 @@ function httpPut() {
 	});
 
 	// post the data
-	post_req.write(post_data);
-	post_req.end();
+	//put_req.write(post_data);
+	put_req.end();
 
 }
 
@@ -60,8 +52,8 @@ function main(){
 	
 	if(process.argv.length > 2){
 		var method = process.argv[2];
-		if(method == 'post'){
-			httpPut();
+		if(method == 'put'){
+			httpPut(process.argv[3]);
 		}
 		else if(method == 'delete'){
 			httpDelete(process.argv[3]);

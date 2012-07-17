@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Upload Example</title>
+  </head>
+  <body>
+
+    <form enctype="multipart/form-data">
+		<input name="file" type="file" />
+		<input type="button" value="Upload" />
+	</form>
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+		$(':button').click(function(){
+			var formData = new FormData($('form')[0]);
+			$.ajax({
+				url: 'http://localhost:3333/IFC-repo/test/uploadexample',  //server script to process data
+				type: 'PUT',
+				data: formData,
+				cache: false,
+				contentType: false,
+				processData: false
+			});
+		});
+	</script>
+	
+	
+
+  </body>
+</html>

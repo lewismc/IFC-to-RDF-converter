@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>IFC repository</title>
+		<link rel="stylesheet" type="text/css" href="/css/style.css" />
+	</head>
+	<body>
+		<h1><%= path %></h1>
+		
+		
+		<ul>
+		<% if(!isRoot){ %>
+		<li class="folder"><a href="..">...</a></li>
+		<% } %>
+		<% for(var i = 0; i < dirs.length; i++) { %>
+			<li class="folder"><a href="<%= dirs[i].url%>"><%= dirs[i].name %></a></li>
+		
+		<% } %>
+		</ul>
+		<ul>
+		<% for(var i = 0; i < resources.length; i++) { %>
+			<li class="file">
+				<div>
+					<div style="float:left; width: 200px"><a href="<%= resources[i].url %>.ifc"><%= resources[i].name %></a></div>
+					<div>available as [<a href="<%= resources[i].url %>.ifc">.ifc] 
+					<% if(resources[i].ttl) { %>
+					[<a href="<%= resources[i].url %>.ttl">.ttl] 
+					<% } %>
+					<% if(resources[i].rdf) { %>
+					[<a href="<%= resources[i].url %>.rdf">.rdf]</div>
+					<% } %>
+					
+				</div>
+			</li>
+		
+		<% } %>
+		</ul>
+		
+	</body>
+</html>

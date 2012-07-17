@@ -1,0 +1,28 @@
+body {
+  direction: ltr; /* LTR */
+  background: #F7F7F6;
+  font-size: 80%;
+  font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Geneva, sans-serif;
+  font-weight: normal;
+  line-height: 1.7em;
+  text-align: left; /* LTR */
+  
+}
+li.file {
+	background: transparent url(/images/ifclogo.jpg) no-repeat 1px 0.35em;
+	list-style-type: none;
+	padding-left: 2em;
+	padding-top: 0.2em;
+}
+
+li.folder {
+	list-style-type: none;
+	background: transparent url(/images/folder.png) no-repeat 1px 0.35em;
+	padding-left: 2em;
+	padding-top: 0.2em;
+}
+
+li a {
+	text-decoration: none;
+	color: black;
+}

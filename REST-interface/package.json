@@ -1,0 +1,9 @@
+{
+  "name": "IFC-to-RDF-server",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "2.5.8",
+	"ejs": "0.7.2",
+	"rimraf": "2.0.2"
+  }
+}

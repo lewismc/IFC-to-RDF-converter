@@ -122,16 +122,18 @@ function configureServer(base_path){
 			var stats = fs.lstatSync(fspath);
 			if(stats.isDirectory()){
 				if(isIFCResource(fspath, item)){ // we have an IFC resource
-					rimraf(fspath, function (er) {
-						if (er) throw er;
-					});
-					nodefs.mkdirSync(fspath, 0777, true);
+					var files = fs.readdirSync(fspath);
+					var i;
+					for(i = 0; i < files.length; i++){
+						fs.unlinkSync(fspath + files[i]);
+					}
 					var uploadedFile = fs.readFileSync(req.files.file.path);
 					fs.writeFileSync(fspath+'/'+item+'.ifc', uploadedFile);
 					res.send('UPDATED ' + req.url, 200);
 					//TODO: startup conversion!
 					
 				} else {
+					console.log('Cannot PUT ' + req.url);
 					res.send('Cannot PUT ' + req.url, 405);
 				}
 			} else {
@@ -176,14 +178,14 @@ function configureServer(base_path){
 				if(isIFCResource(fspath, item)){ // we have an IFC resource
 					rimraf(fspath, function (er) {
 						if (er) throw er;
+						res.send('DELETED ' + req.url, 200);
 					});
-					res.send('DELETED ' + req.url, 200);
 				} else if(item == '' && containsOnlyDirs(fspath)) { // we have a directory
 					if(path != ''){
 						rimraf(fspath, function (er) {
 							if (er) throw er;
+							res.send('DELETED ' + req.url, 200);
 						});
-						res.send('DELETED ' + req.url, 200);
 					} else {
 						res.send('Cannot DELETE ' + req.url, 405);
 					}

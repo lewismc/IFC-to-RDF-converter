@@ -8,8 +8,8 @@
 		
 		<div id="editbar">
 			<ul>
-				<li class="newfolder"><a href="">New Folder</a></li>
-				<li class="upload"><a href="">Upload</a></li>
+				<li class="newfolder classname"><a href="#divNewFolderDialog">New Folder</a></li>
+				<li class="upload"><a href="#divNewUploadDialog">Upload</a></li>
 			</ul>
 		</div>
 		
@@ -20,8 +20,10 @@
 			<li class="folder"><a href="..">...</a></li>
 			<% } %>
 			<% for(var i = 0; i < dirs.length; i++) { %>
-				<li class="folder"><a href="<%= dirs[i].url%>"><%= dirs[i].name %></a></li>
-			
+				<li class="folder">
+					<div style="float:left; width: 200px"><a href="<%= dirs[i].url%>"><%= dirs[i].name %></a></div>
+					<div><a href="" class="delete" id="delete_<%= dirs[i].url%>"><img src="/images/delete.png" alt="delete"/></a></div>	
+				</li>
 			<% } %>
 			</ul>
 			<ul>
@@ -29,12 +31,13 @@
 				<li class="file">
 					<div>
 						<div style="float:left; width: 200px"><a href="<%= resources[i].url %>.ifc"><%= resources[i].name %></a></div>
-						<div>available as [<a href="<%= resources[i].url %>.ifc">.ifc] 
+						<div><a href="" class="delete" id="delete_<%= resources[i].url%>"><img src="/images/delete.png" alt="delete"/></a>
+						<span style="margin-left: 100px">available as [<a href="<%= resources[i].url %>.ifc">.ifc</a>] 
 						<% if(resources[i].ttl) { %>
-						[<a href="<%= resources[i].url %>.ttl">.ttl] 
+						[<a href="<%= resources[i].url %>.ttl">.ttl</a>] 
 						<% } %>
 						<% if(resources[i].rdf) { %>
-						[<a href="<%= resources[i].url %>.rdf">.rdf]</div>
+						[<a href="<%= resources[i].url %>.rdf">.rdf</a>]</span></div>
 						<% } %>
 						
 					</div>
@@ -43,5 +46,96 @@
 			<% } %>
 			</ul>
 		</div>
+		
+		<div id="divNewFolderDialog" class="divModalDialog">
+			<div>
+				<h1>Enter folder name</h1>
+				<input id="folderName" type="text" size="20" />
+				<ul>
+					<li><a href="" id="createFolder">Create</a></li>
+					<li><a href="">Cancel</a></li>
+				</ul>
+				
+			</div>
+		</div>
+		
+		<div id="divNewUploadDialog" class="divModalDialog">
+			<div>
+				<h1>Select an IFC file</h1>
+				<form id="ifcFileForm" enctype="multipart/form-data">
+					<input id="ifcFile" type="file" accept=".ifc"/>
+				</form>	
+				<label>name:</label>
+				<input id="ifcFileName" type="text" size="20" />
+				<ul>
+					<li><a href="" id="uploadFile">Upload</a></li>
+					<li><a href="">Cancel</a></li>
+				</ul>
+				
+			</div>
+		</div>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript">
+			$('#createFolder').click(function(){
+				var folder = $('#folderName').val() + '/';
+				$.ajax({
+					url: folder, 
+					type: 'PUT',
+					statusCode: {
+						405: function() {
+							alert("Folder name already exists");
+						}
+					},
+					async: false,
+					cache: false,
+					contentType: false,
+					processData: false
+				});
+			});
+			
+			$('#uploadFile').click(function(){
+				var file = $('#ifcFile').val();
+				if(file.substr(-4) != '.ifc'){
+					alert('Only .ifc files are accepted');
+				} else {
+					var name = $('#ifcFileName').val();
+					var fd = new FormData();    
+					fd.append( 'file', $('#ifcFile')[0].files[0] );
+					$.ajax({
+						url: name,
+						type: 'PUT',
+						data: fd,
+						async: false,
+						cache: false,
+						contentType: false,
+						processData: false
+					});
+				}
+			});	
+			
+			$('#ifcFile').change(function(){
+				var file = $('#ifcFile').val();
+				if(file.lastIndexOf('\\') != -1)
+					file = file.substring(file.lastIndexOf('\\')+1, file.length-4);
+				else if(file.lastIndexOf('/') != -1)
+					file = file.substring(file.lastIndexOf('/')+1, file.length-4);
+				$('#ifcFileName').val(file);
+			});
+			
+			$('a.delete').click(function(){
+				var name = $(this).attr('id');
+				name = name.replace('delete_', '');
+				$.ajax({
+					url: name,
+					type: 'DELETE',
+					async: false,
+					cache: false,
+					contentType: false,
+					processData: false
+				});
+			});	
+		</script>
+	
 	</body>
 </html>

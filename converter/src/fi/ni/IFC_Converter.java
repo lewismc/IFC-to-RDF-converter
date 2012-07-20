@@ -59,21 +59,24 @@ public class IFC_Converter {
 	}
 
 	public static void main(String[] args) {
-		if(args.length != 4 && !(args.length == 2 && args[0].equals("-json")))
+		if(args.length != 4 && !(args.length == 2 && args[0].startsWith("-json")))
 		 	System.out.println("Usage:  java IFC_Converter express_filename ifc_filename output_filename model_name \nExample: java IFC_Converter c:\\jo\\IFC2X3_TC1.exp C:\\jo\\sample.ifc c:\\jo\\output_rdf.txt sample");
 		else {
 			if(args.length == 4) {
 				convert(args[0], args[1], args[2], args[3], DEFAULT_PATH, null);
 			} else {
-				try {
-					FileInputStream fis = new FileInputStream(args[1]);
-					String jsonString = slurp(fis);
-					fis.close();
-					convert(jsonString);
-				} catch (Exception e) {
-					e.printStackTrace();
+				if(args[0].equals("-json")){
+					try {
+						FileInputStream fis = new FileInputStream(args[1]);
+						String jsonString = slurp(fis);
+						fis.close();
+						convert(jsonString);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				} else if(args[0].equals("-jsonString")){
+					convert(args[1]);
 				}
-				
 			}
 		}
 				

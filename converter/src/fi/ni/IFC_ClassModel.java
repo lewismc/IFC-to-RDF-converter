@@ -257,7 +257,7 @@ public class IFC_ClassModel {
 
 		BufferedWriter out = null;
 		Connection c = null;
-		String prefix_query = "PREFIX : <" + path + "#> "
+		String prefix_query = "PREFIX : <" + path + "> "
 				+ "PREFIX owl: <" + Namespace.OWL + "> "
 				+ "PREFIX ifc: <" + Namespace.IFC + "> "
 				+ "PREFIX xsd: <" + Namespace.XSD + "> "
@@ -266,7 +266,7 @@ public class IFC_ClassModel {
 		try {
 			//Setup file output
 			out = new BufferedWriter(new FileWriter(outputFileName));
-			out.write("@prefix : <" + path + "#>.\n");
+			out.write("@prefix : <" + path + ">.\n");
 			out.write("@prefix owl: <" + Namespace.OWL + "> .\n");
 			out.write("@prefix ifc: <" + Namespace.IFC + "> .\n");
 			out.write("@prefix xsd: <" + Namespace.XSD + "> .\n");
@@ -303,7 +303,7 @@ public class IFC_ClassModel {
 			}
 
 		} finally {
-			out.close();
+			if(out!=null) out.close();
 			if(c!=null) c.close();
 		}
 	}

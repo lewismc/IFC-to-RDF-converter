@@ -78,7 +78,13 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 		<script type="text/javascript">
 			$('#createFolder').click(function(){
-				var folder = $('#folderName').val() + '/';
+				var folderName = $('#folderName').val();
+				if(folderName == ''){
+					alert('Folder name cannot be empty');
+					return;
+				}
+					
+				var folder = folderName + '/';
 				$.ajax({
 					url: folder, 
 					type: 'PUT',
@@ -98,20 +104,25 @@
 				var file = $('#ifcFile').val();
 				if(file.substr(-4) != '.ifc'){
 					alert('Only .ifc files are accepted');
-				} else {
-					var name = $('#ifcFileName').val();
-					var fd = new FormData();    
-					fd.append( 'file', $('#ifcFile')[0].files[0] );
-					$.ajax({
-						url: name,
-						type: 'PUT',
-						data: fd,
-						async: false,
-						cache: false,
-						contentType: false,
-						processData: false
-					});
+					return;
+				} 
+
+				var name = $('#ifcFileName').val();
+				if(name == ''){
+					alert('Name cannot be empty');
+					return;
 				}
+				var fd = new FormData();    
+				fd.append( 'file', $('#ifcFile')[0].files[0] );
+				$.ajax({
+					url: name,
+					type: 'PUT',
+					data: fd,
+					async: false,
+					cache: false,
+					contentType: false,
+					processData: false
+				});
 			});	
 			
 			$('#ifcFile').change(function(){

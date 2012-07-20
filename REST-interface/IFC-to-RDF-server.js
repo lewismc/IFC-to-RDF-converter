@@ -1,6 +1,8 @@
 var express = require("express");
 var rimraf = require('rimraf');
-var nodefs = require('node-fs')
+var nodefs = require('node-fs');
+var spawn = require('child_process').spawn;
+var util = require('util');
 var fs = require('fs');
 eval(fs.readFileSync('settings.js', encoding="ascii"));
 
@@ -130,7 +132,7 @@ function configureServer(base_path){
 					var uploadedFile = fs.readFileSync(req.files.file.path);
 					fs.writeFileSync(fspath+'/'+item+'.ifc', uploadedFile);
 					res.send('UPDATED ' + req.url, 200);
-					//TODO: startup conversion!
+					generateRDF(fspath, item, req.url);
 					
 				} else {
 					console.log('Cannot PUT ' + req.url);
@@ -151,8 +153,7 @@ function configureServer(base_path){
 					var uploadedFile = fs.readFileSync(req.files.file.path);
 					fs.writeFileSync(fspath+'/'+item+'.ifc', uploadedFile);
 					res.send('CREATED ' + req.url, 201);
-					//TODO: startup conversion!
-					
+					generateRDF(fspath, item, req.url);
 				}
 			} else {
 				console.log(e);
@@ -206,6 +207,74 @@ function configureServer(base_path){
 	});
 	
 	return app;
+}
+
+function generateRDF(fspath, item, url){
+	//startup conversion!
+	var config = {'express_file': 'workspace/IFC2X3.exp'};
+	config.ifc_file = fspath+'/'+item+'.ifc';
+	config.output_file = 'workspace/tmp/'+item+'.ttl';
+	config.model_name = item;
+	config.path = settings.rdf_host+url+'#';
+	//TODO: add virtuoso switch?
+	
+	var java = spawn('java', ['-jar', 'workspace/IFC-converter.jar', '-jsonString', JSON.stringify(config)]);
+	java.stderr.on('data', function (data) {
+		console.log('stderr: ' + data);
+	});
+	java.on('exit', function(java_code) {
+		if (java_code == 0) {
+			//Make .ttl available
+			var counter = 0;
+			var is_ttl = fs.createReadStream('workspace/tmp/'+item+'.ttl');
+			var os_ttl = fs.createWriteStream(fspath+'/'+item+'.ttl');
+			util.pump(is_ttl, os_ttl, function() {
+				counter++;
+				if(counter == 2){
+					fs.unlinkSync('workspace/tmp/'+item+'.ttl');
+					fs.unlinkSync('workspace/tmp/'+item+'.rdf');
+				}
+			});
+			
+			//Create RDF/XML representation
+			var file = fs.createWriteStream('workspace/tmp/'+item+'.rdf');
+			var args = clone(settings.cwm_command.args);
+			var l = args.length;
+			args[l] = '--n3';
+			args[l+1] = 'workspace/tmp/'+item+'.ttl';
+			args[l+2] = '--rdf';
+			var cwm = spawn(settings.cwm_command.command, args);
+			cwm.stdout.on('data', function (data) {	file.write(data); });
+			cwm.stderr.on('data', function (data) {	console.log('stderr: ' + data) });
+			cwm.stdout.on('end', function (data) {	file.end(); });
+			cwm.on('exit', function(cwm_code) { 
+				if(cwm_code == 0){
+					var is_rdf = fs.createReadStream('workspace/tmp/'+item+'.rdf');
+					var os_rdf = fs.createWriteStream(fspath+'/'+item+'.rdf');
+					util.pump(is_rdf, os_rdf, function() {
+						counter++;
+						if(counter == 2){
+							fs.unlinkSync('workspace/tmp/'+item+'.ttl');
+							fs.unlinkSync('workspace/tmp/'+item+'.rdf');
+						}
+					});		
+				}
+			});
+		} 
+	});
+}
+
+function clone(x){
+    if (x.clone)
+        return x.clone();
+    if (x.constructor == Array)
+    {
+        var r = [];
+        for (var i=0,n=x.length; i<n; i++)
+            r.push(clone(x[i]));
+        return r;
+    }
+    return x;
 }
 
 function notfound(req, res){

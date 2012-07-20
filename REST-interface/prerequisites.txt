@@ -1,5 +1,0 @@
-1) Install Node.js
-2) Install Java (> v5)
-3) Install cwm (http://www.w3.org/2000/10/swap/doc/cwm.html)
-4) Edit settings.js
-5) Run $node IFC-to-RDF-server.js

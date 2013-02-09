@@ -8,3 +8,4 @@
 
 ## Run
 ```$node IFC-to-RDF-server.js```
+Go to http://[host]:[port]/IFC-repo/
